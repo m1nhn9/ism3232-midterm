@@ -51,7 +51,3 @@ The project has 34 tests covering all eight functions, the six rule boundaries, 
 - `.gitignore`: Excludes the virtual environment, Python bytecode, and tool caches.
 - `tests/__init__.py`: Marks the tests directory as a Python package.
 - `tests/test_business_rules.py`: The 34 pytest tests for the business functions.
-
-## AI Use Statement
-
-I used OpenAI Codex to help implement, test, and document this project.
