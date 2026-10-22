@@ -1,0 +1,82 @@
+NO_DISCOUNT = 0.0
+STANDARD_DISCOUNT_MIN_NIGHTS = 4
+EXTENDED_DISCOUNT_MIN_NIGHTS = 14
+STANDARD_DISCOUNT = 0.06
+EXTENDED_DISCOUNT = 0.18
+CLEANING_FEE_LIMIT = 300.0
+CLEANING_FEE = 40.0
+CREDIT_CHECK_MIN_TOTAL = 2000.0
+WELCOME_PACKAGE_NIGHT_LIMIT = 5
+WELCOME_PACKAGE_MIN_TOTAL = 1000.0
+
+
+def calculate_room_cost(nightly_rate: float, nights: int) -> float:
+    """Return the room cost before discounts or fees."""
+    return nightly_rate * nights
+
+
+def get_stay_discount(nights: int, corporate: bool = False) -> float:
+    """Return the discount rate for the stay length and account type."""
+    if nights >= EXTENDED_DISCOUNT_MIN_NIGHTS:
+        return EXTENDED_DISCOUNT
+    if nights >= STANDARD_DISCOUNT_MIN_NIGHTS or corporate:
+        return STANDARD_DISCOUNT
+    return NO_DISCOUNT
+
+
+def calculate_stay_total(
+    nightly_rate: float, nights: int, corporate: bool = False
+) -> float:
+    """Return the discounted room cost with any applicable cleaning fee."""
+    room_cost = calculate_room_cost(nightly_rate, nights)
+    discount = get_stay_discount(nights, corporate)
+    total = room_cost * (1 - discount)
+    if total <= CLEANING_FEE_LIMIT:
+        total += CLEANING_FEE
+    return total
+
+
+def requires_credit_check(total: float) -> bool:
+    """Return whether the stay total requires a credit check."""
+    return total >= CREDIT_CHECK_MIN_TOTAL
+
+
+def gets_welcome_package(nights: int, total: float) -> bool:
+    """Return whether both welcome-package requirements are satisfied."""
+    return nights > WELCOME_PACKAGE_NIGHT_LIMIT and total >= WELCOME_PACKAGE_MIN_TOTAL
+
+
+def total_reserved(stays: list) -> float:
+    """Return the combined stay totals using each stay's account type."""
+    total = 0.0
+    for stay in stays:
+        total += calculate_stay_total(
+            stay["nightly_rate"], stay["nights"], stay["corporate"]
+        )
+    return total
+
+
+def largest_stay(stays: list) -> str:
+    """Return the first guest with the largest stay total, or an empty string."""
+    largest_guest = ""
+    largest_total = None
+    for stay in stays:
+        total = calculate_stay_total(
+            stay["nightly_rate"], stay["nights"], stay["corporate"]
+        )
+        if largest_total is None or total > largest_total:
+            largest_total = total
+            largest_guest = stay["guest"]
+    return largest_guest
+
+
+def format_stay_line(
+    guest: str, total: float, credit_check: bool, welcome_package: bool
+) -> str:
+    """Return a stay report line with currency and yes-or-no decisions."""
+    credit_check_text = "yes" if credit_check else "no"
+    welcome_package_text = "yes" if welcome_package else "no"
+    return (
+        f"{guest}: ${total:.2f} | credit check: {credit_check_text}"
+        f" | welcome package: {welcome_package_text}"
+    )
