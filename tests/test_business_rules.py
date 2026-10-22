@@ -4,7 +4,9 @@ from business_rules import (
     format_stay_line,
     get_stay_discount,
     gets_welcome_package,
+    largest_stay,
     requires_credit_check,
+    total_reserved,
 )
 
 
@@ -124,3 +126,58 @@ def test_format_stay_line_formats_credit_check_without_welcome_package():
         format_stay_line("Short stay", 2000.0, True, False)
         == "Short stay: $2000.00 | credit check: yes | welcome package: no"
     )
+
+
+def test_total_reserved_adds_stays_with_discounts_and_cleaning_fees():
+    stays = [
+        {"guest": "Short", "nightly_rate": 110.0, "nights": 2, "corporate": False},
+        {"guest": "Account", "nightly_rate": 150.0, "nights": 2, "corporate": True},
+        {"guest": "Long", "nightly_rate": 140.0, "nights": 20, "corporate": False},
+    ]
+    assert round(total_reserved(stays), 2) == 2878.0
+
+
+def test_total_reserved_returns_zero_for_empty_list():
+    assert round(total_reserved([]), 2) == 0.0
+
+
+def test_total_reserved_handles_one_stay():
+    stays = [{"guest": "Solo", "nightly_rate": 180.0, "nights": 6, "corporate": False}]
+    assert round(total_reserved(stays), 2) == 1015.2
+
+
+def test_largest_stay_uses_total_instead_of_nightly_rate():
+    stays = [
+        {"guest": "High rate", "nightly_rate": 500.0, "nights": 1, "corporate": False},
+        {"guest": "Long stay", "nightly_rate": 140.0, "nights": 20, "corporate": False},
+        {"guest": "Last", "nightly_rate": 100.0, "nights": 1, "corporate": False},
+    ]
+    assert largest_stay(stays) == "Long stay"
+
+
+def test_largest_stay_keeps_first_guest_when_totals_tie():
+    stays = [
+        {"guest": "First", "nightly_rate": 150.0, "nights": 2, "corporate": False},
+        {"guest": "Second", "nightly_rate": 300.0, "nights": 1, "corporate": False},
+    ]
+    assert largest_stay(stays) == "First"
+
+
+def test_largest_stay_returns_empty_string_for_empty_list():
+    assert largest_stay([]) == ""
+
+
+def test_largest_stay_uses_corporate_discount():
+    stays = [
+        {"guest": "Account", "nightly_rate": 150.0, "nights": 2, "corporate": True},
+        {"guest": "Regular", "nightly_rate": 150.0, "nights": 2, "corporate": False},
+    ]
+    assert largest_stay(stays) == "Regular"
+
+
+def test_largest_stay_includes_cleaning_fee_in_comparison():
+    stays = [
+        {"guest": "No fee", "nightly_rate": 301.0, "nights": 1, "corporate": False},
+        {"guest": "With fee", "nightly_rate": 300.0, "nights": 1, "corporate": False},
+    ]
+    assert largest_stay(stays) == "With fee"

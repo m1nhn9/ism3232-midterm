@@ -46,6 +46,30 @@ def gets_welcome_package(nights: int, total: float) -> bool:
     return nights > WELCOME_PACKAGE_NIGHT_LIMIT and total >= WELCOME_PACKAGE_MIN_TOTAL
 
 
+def total_reserved(stays: list) -> float:
+    """Return the combined stay totals using each stay's account type."""
+    total = 0.0
+    for stay in stays:
+        total += calculate_stay_total(
+            stay["nightly_rate"], stay["nights"], stay["corporate"]
+        )
+    return total
+
+
+def largest_stay(stays: list) -> str:
+    """Return the first guest with the largest stay total, or an empty string."""
+    largest_guest = ""
+    largest_total = None
+    for stay in stays:
+        total = calculate_stay_total(
+            stay["nightly_rate"], stay["nights"], stay["corporate"]
+        )
+        if largest_total is None or total > largest_total:
+            largest_total = total
+            largest_guest = stay["guest"]
+    return largest_guest
+
+
 def format_stay_line(
     guest: str, total: float, credit_check: bool, welcome_package: bool
 ) -> str:
