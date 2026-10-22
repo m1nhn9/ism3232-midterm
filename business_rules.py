@@ -5,6 +5,9 @@ STANDARD_DISCOUNT = 0.06
 EXTENDED_DISCOUNT = 0.18
 CLEANING_FEE_LIMIT = 300.0
 CLEANING_FEE = 40.0
+CREDIT_CHECK_MIN_TOTAL = 2000.0
+WELCOME_PACKAGE_NIGHT_LIMIT = 5
+WELCOME_PACKAGE_MIN_TOTAL = 1000.0
 
 
 def calculate_room_cost(nightly_rate: float, nights: int) -> float:
@@ -31,3 +34,25 @@ def calculate_stay_total(
     if total <= CLEANING_FEE_LIMIT:
         total += CLEANING_FEE
     return total
+
+
+def requires_credit_check(total: float) -> bool:
+    """Return whether the stay total requires a credit check."""
+    return total >= CREDIT_CHECK_MIN_TOTAL
+
+
+def gets_welcome_package(nights: int, total: float) -> bool:
+    """Return whether both welcome-package requirements are satisfied."""
+    return nights > WELCOME_PACKAGE_NIGHT_LIMIT and total >= WELCOME_PACKAGE_MIN_TOTAL
+
+
+def format_stay_line(
+    guest: str, total: float, credit_check: bool, welcome_package: bool
+) -> str:
+    """Return a stay report line with currency and yes-or-no decisions."""
+    credit_check_text = "yes" if credit_check else "no"
+    welcome_package_text = "yes" if welcome_package else "no"
+    return (
+        f"{guest}: ${total:.2f} | credit check: {credit_check_text}"
+        f" | welcome package: {welcome_package_text}"
+    )
