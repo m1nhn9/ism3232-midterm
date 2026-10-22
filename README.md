@@ -53,3 +53,5 @@ The project has 34 tests covering all eight functions, the six rule boundaries, 
 - `tests/test_business_rules.py`: The 34 pytest tests for the business functions.
 
 ## AI Use Statement
+
+No AI interaction was used for this project
