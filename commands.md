@@ -2,11 +2,58 @@
 
 ## 1. Building the project
 
-This workspace already contained the project folder, the original seven files, the GitHub remote, and two commits when this session began. The earlier folder creation, empty-file creation, initial virtual environment, .gitignore creation, and GitHub connection commands were not available, so they cannot be reproduced as an original terminal record. The existing repository was continued without replacing its history.
-
-These are the setup commands actually executed in this session, in order:
+The original project commands were recovered from local zsh history. The block below preserves both setup attempts and the later GitHub connection commands in their recorded order, followed by the setup commands run while completing this workspace. The history's stored multiline markers are displayed as line breaks; original terminal output was not retained, so the history does not establish which repeated attempts succeeded.
 
 ```sh
+mkdir ism3232-midterm && cd ism3232-midterm
+git init
+python3 -m venv .venv
+source .venv/bin/activate
+pip install pytest ruff
+mkdir tests
+touch business_rules.py main.py README.md requirements.txt .gitignore tests/__init__.py tests/test_business_rules.py
+echo ".venv/" > .gitignore
+echo "__pycache__/" >> .gitignore
+pip freeze > requirements.txt
+git add .
+git commit -m "Set up project structure and gitignore"
+cd ism3232-midterm
+pwd
+ls
+cd ~/Documents
+mkdir ism3232-midterm
+cd ism3232-midterm
+pwd
+pwd
+cd /Users/hoo/Documents/ism3232-midterm
+ls
+ls
+ls -a
+mkdir ism3232-midterm && cd ism3232-midterm
+git init
+python3 -m venv .venv
+source .venv/bin/activate
+pip install pytest ruff
+mkdir tests
+touch business_rules.py main.py README.md requirements.txt .gitignore tests/__init__.py tests/test_business_rules.py
+echo ".venv/" > .gitignore
+echo "__pycache__/" >> .gitignore
+pip freeze > requirements.txt
+git add .
+git commit -m "Set up project structure and gitignore"
+ls -a
+git status
+cat .gitignore
+git log --oneline
+git remote add origin https://github.com/m1nhn9/ism3232-midterm.git
+git branch -M main
+git push -u origin main
+cd /Users/hoo/Documents/ism3232-midterm
+source .venv/bin/activate
+ruff format .
+ruff check .
+pytest
+
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install pytest ruff
@@ -14,7 +61,7 @@ python3 -m pip freeze > requirements.txt
 touch commands.md
 ```
 
-The Python files, tests, README, and additional cache exclusions were edited using Codex's patch tool. The requirements file above came from the newly created virtual environment. The following sections contain terminal output captured during this session.
+The Python files, tests, README, and additional cache exclusions were edited using Codex's patch tool. The requirements file came from the newly created workspace virtual environment. The following sections contain terminal output captured in this workspace.
 
 ## 2. The virtual environment
 
@@ -130,6 +177,8 @@ git log --oneline
 ```
 
 ```text
+16e3304 Remove the disclosure section from README
+ce0a832 Record actual terminal verification output and available setup commands
 9581569 Document Seabreeze Inn rules, usage, tests, and AI assistance
 520d66f Print the Seabreeze Inn stay report and loop-counted summaries
 8b3be0a Implement loop-based reservation totals and largest-stay selection with tests
@@ -139,4 +188,4 @@ a7eddef Add credit checks, welcome packages, and stay-line formatting with tests
 98097f2 Set up project structure and gitignore
 ```
 
-There were 7 commits when this history was captured, immediately before committing this terminal record.
+There were 9 commits when this history was captured, immediately before committing this updated terminal record.
